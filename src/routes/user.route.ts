@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { createUser } from "../controllers/user.controller";
+import { createUserHandler } from "../controllers/user.controller";
+import validatorResource from "../middleware/validatorResource";
+import { createUserSchema } from "../schema/user.schema";
 
 const userRouter = Router();
 
-userRouter.post("/", createUser);
+userRouter.post("/", validatorResource(createUserSchema), createUserHandler);
 
 export default userRouter;
