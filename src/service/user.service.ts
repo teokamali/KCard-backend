@@ -3,14 +3,12 @@ import { DocumentDefinition, FilterQuery, QueryOptions } from "mongoose";
 import UserModel, { UserDocument } from "../models/user.model";
 
 export async function createUser(
-    input: DocumentDefinition<
-        Omit<UserDocument, "createAt" | "updateAt" | "comparePassword">
-    >
+    input: DocumentDefinition<Omit<UserDocument, "createAt" | "updateAt" | "comparePassword">>
 ) {
     try {
         const user = await UserModel.create(input);
 
-        return omit(user.toJSON(), "password");
+        return user
     } catch (err: any) {
         throw err;
     }
@@ -26,22 +24,17 @@ export async function findUser(query: FilterQuery<UserDocument>) {
     }
 }
 
-export async function validatePassword({
-    email,
-    password,
-}: {
-    email: string;
-    password: string;
-}) {
+export async function validateUserCerdential({ email, password }: { email: string; password: string }) {
     try {
         const user = await findUser({ email });
+
         if (!user) return false;
 
         const isValid = await user.comparePassword(password);
-            console.log("isValid",isValid)
+
         if (!isValid) return false;
 
-        return user
+        return user;
     } catch (err) {
         throw err;
     }

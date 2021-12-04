@@ -10,9 +10,9 @@ export async function createUserHandler(
 ) {
     try {
         // check user is exist
-        const user = await findUser({ email: req.body.email });
+        const isUserExist = await findUser({ email: req.body.email });
 
-        if (user) {
+        if (isUserExist) {
             throw {
                 message: "duplicate user",
                 status: 409,
@@ -20,12 +20,12 @@ export async function createUserHandler(
         }
 
         // create new user
-        const newUser = await createUser(req.body);
-
+        const user = await createUser(req.body);
+        
         // send user's data
         res.status(200).json({
             success: true,
-            user: omit(newUser ,"password"),
+            user: omit(user.toJSON(), "password"),
         });
     } catch (err: any) {
         next(err);

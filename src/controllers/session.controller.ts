@@ -2,13 +2,13 @@ import config from "config";
 import { NextFunction, Request, Response } from "express";
 import { omit } from "lodash";
 import { createUserSession } from "../service/session.service";
-import { validatePassword } from "../service/user.service";
+import { validateUserCerdential } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
 
 export async function createUserSessionHandler(req: Request, res: Response, next: NextFunction) {
     try {
         // validate user's password
-        const user = await validatePassword(req.body);
+        const user = await validateUserCerdential(req.body);
 
         if (!user) {
             throw {
@@ -16,16 +16,15 @@ export async function createUserSessionHandler(req: Request, res: Response, next
                 status: 401,
             };
         }
-
+    
         // create session
         const session = await createUserSession(user._id, req.get("user-agent") || "");
-        console.log("user", user);
-        console.log("session", session);
+
         // create accessToken
         const accessToken = signJwt(
             {
                 ...omit(user.toJSON(), "password"),
-                session: session.toJSON()._id,
+                session: session._id,
             },
             {
                 expiresIn: config.get<string>("ttl.accessToken"),
@@ -34,15 +33,11 @@ export async function createUserSessionHandler(req: Request, res: Response, next
 
         // create refreshToken
 
-        const refreshToken = signJwt(session.toJSON(), {
+        const refreshToken = signJwt(session, {
             expiresIn: config.get<string>("ttl.refreshToken"),
         });
 
         // send accessToken and refreshToken
-        console.log({
-            refreshToken,
-            accessToken,
-        });
         res.status(200).json({
             success: true,
             refreshToken,

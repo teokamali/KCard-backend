@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import SessionModel from "../models/session.model";
 
 export async function createUserSession(
@@ -11,7 +10,7 @@ export async function createUserSession(
             userAgent,
         });
 
-        return session;
+        return session.toJSON()
     } catch (err) {
         throw err;
     }
