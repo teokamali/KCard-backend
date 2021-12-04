@@ -4,12 +4,12 @@ import config from "config";
 const privateKey = config.get<string>("keys.privateKey");
 
 export function signJwt(payload: object, options?: Jwt.SignOptions | undefined) {
-    return Jwt.sign(payload, privateKey, { ...options });
+    return Jwt.sign(payload, privateKey, { ...options })
 }
 
-export async function verfyJwt(token: string) {
+export function verfyJwt(token: string) {
     try {
-        const decoded = await Jwt.verify(token, privateKey);
+        const decoded = Jwt.verify(token, privateKey)
 
         return {
             decoded,
