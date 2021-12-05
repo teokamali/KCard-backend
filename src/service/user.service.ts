@@ -4,6 +4,7 @@ import { DocumentDefinition, FilterQuery, QueryOptions } from "mongoose";
 import UserModel, { UserDocument } from "../models/user.model";
 import { signJwt, verfyJwt } from "../utils/jwt.utils";
 import { findSession } from "./session.service";
+
 export async function createUser(input: DocumentDefinition<Omit<UserDocument, "createAt" | "updateAt" | "comparePassword">>) {
     try {
         const user = await UserModel.create(input);
@@ -16,7 +17,7 @@ export async function createUser(input: DocumentDefinition<Omit<UserDocument, "c
 
 export async function findUser(query: FilterQuery<UserDocument>, options?: QueryOptions | undefined) {
     try {
-        const user = await UserModel.findOne(query, options);
+        const user = await UserModel.findOne(query, {}, options);
 
         return user;
     } catch (err: any) {

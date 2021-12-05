@@ -1,6 +1,7 @@
-import config from "config";
 import { NextFunction, Request, Response } from "express";
+import config from "config";
 import { omit } from "lodash";
+import status from "http-status";
 import { createUserSession, findSessions, updateSession } from "../service/session.service";
 import { validateUserCerdential } from "../service/user.service";
 import { signJwt } from "../utils/jwt.utils";
@@ -13,7 +14,7 @@ export async function createUserSessionHandler(req: Request, res: Response, next
         if (!user) {
             throw {
                 message: "Invalid email or password",
-                status: 401,
+                status: status.UNAUTHORIZED,
             };
         }
 
@@ -32,13 +33,12 @@ export async function createUserSessionHandler(req: Request, res: Response, next
         );
 
         // create refreshToken
-
         const refreshToken = signJwt(session, {
             expiresIn: config.get<string>("ttl.refreshToken"),
         });
 
         // send accessToken and refreshToken
-        res.status(200).json({
+        res.status(status.OK).json({
             success: true,
             refreshToken,
             accessToken,
@@ -53,7 +53,7 @@ export async function getUserSessionsHandler(req: Request, res: Response, next: 
         const userId = res.locals.user._id;
         const sessions = await findSessions({ user: userId });
 
-        res.status(200).json(sessions);
+        res.status(status.OK).json(sessions);
     } catch (err) {
         next(err);
     }
@@ -71,7 +71,7 @@ export async function invalidateUserSessionHandler(req: Request, res: Response, 
             }
         );
 
-        res.status(200).json({
+        res.status(status.OK).json({
             success: true,
             refreshToken: null,
             accessToken: null,

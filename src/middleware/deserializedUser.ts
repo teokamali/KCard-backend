@@ -12,12 +12,13 @@ async function deserializedUser(req: Request, res: Response, next: NextFunction)
     const { decoded, expired } = verfyJwt(accessToken);
 
     if (decoded) {
+        //! session must be check before set user in res.locals
+
         res.locals.user = decoded;
         return next();
     }
 
     if (expired && refreshToken) {
-
         const newAccessToken = await reIssueAccessToken({ refreshToken });
 
         if (!newAccessToken) return next();

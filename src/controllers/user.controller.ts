@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { omit } from "lodash";
+import status from "http-status";
 import { createUserInput } from "../schema/user.schema";
 import { createUser, findUser } from "../service/user.service";
 
@@ -15,7 +16,7 @@ export async function createUserHandler(
         if (isUserExist) {
             throw {
                 message: "duplicate user",
-                status: 409,
+                status: status.BAD_REQUEST,
             };
         }
 
@@ -23,7 +24,7 @@ export async function createUserHandler(
         const user = await createUser(req.body);
         
         // send user's data
-        res.status(200).json({
+        res.status(status.OK).json({
             success: true,
             user: omit(user.toJSON(), "password"),
         });

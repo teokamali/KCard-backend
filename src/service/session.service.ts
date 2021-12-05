@@ -27,7 +27,7 @@ export async function findSessions(query: FilterQuery<SessionDocument>) {
 
 export async function findSession(query: FilterQuery<SessionDocument>, options?: QueryOptions | undefined) {
     try {
-        const sessions = await SessionModel.findOne(query, options);
+        const sessions = await SessionModel.findOne(query,{}, options);
 
         return sessions;
     } catch (err) {

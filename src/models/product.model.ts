@@ -1,31 +1,32 @@
 import mongoose from "mongoose";
 import { customAlphabet } from "nanoid";
-import { number } from "zod";
 import { UserDocument } from "./user.model";
 
 const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 
-export interface ProductDocument extends mongoose.Document {
+export interface ProductInput {
     user: UserDocument["_id"];
-    productId: string;
     title: string;
     description: string;
+    price: number;
     image: string;
+}
+export interface ProductDocument extends ProductInput, mongoose.Document {
     createAt: Date;
     updateAt: Date;
 }
 
 const productSchema = new mongoose.Schema(
     {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
         productId: {
             type: String,
             required: true,
             unique: true,
-            default: () => nanoid(),
+            default: () => `product_${nanoid()}`,
+        },
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
         },
         title: {
             type: String,
@@ -36,7 +37,7 @@ const productSchema = new mongoose.Schema(
             required: true,
         },
         price: {
-            type: number,
+            type: Number,
             required: true,
         },
         image: {

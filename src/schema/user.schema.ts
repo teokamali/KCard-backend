@@ -20,10 +20,4 @@ export const createUserSchema = object({
     }),
 });
 
-export type createUserInput = {
-    body: {
-        name: string;
-        email: string;
-        password: string;
-    };
-};
+export type createUserInput = TypeOf<typeof createUserSchema>;
