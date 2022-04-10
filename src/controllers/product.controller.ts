@@ -3,7 +3,11 @@ import { NextFunction, Request, Response } from "express";
 import { CreateProductInput, DeleteProductInput, ReadProductInput, UpdateProductInput } from "../schema/product.schema";
 import { createProduct, deleteProduct, findProduct, updateProduct } from "../service/product.service";
 
-export async function createProductHandler(req: Request<{}, {}, CreateProductInput["body"]>, res: Response, next: NextFunction) {
+export async function createProductHandler(
+    req: Request<{}, {}, CreateProductInput["body"]>,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const userId = res.locals.user._id;
         const body = req.body;
@@ -36,7 +40,11 @@ export async function getProductHandler(req: Request<ReadProductInput["params"]>
         next(err);
     }
 }
-export async function updateProductHandler(req: Request<UpdateProductInput["params"], {}, UpdateProductInput["body"]>, res: Response, next: NextFunction) {
+export async function updateProductHandler(
+    req: Request<UpdateProductInput["params"], {}, UpdateProductInput["body"]>,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const { user } = res.locals;
         const { productId } = req.params;
@@ -68,7 +76,11 @@ export async function updateProductHandler(req: Request<UpdateProductInput["para
         next(err);
     }
 }
-export async function deleteProductHandler(req: Request<DeleteProductInput["params"]>, res: Response, next: NextFunction) {
+export async function deleteProductHandler(
+    req: Request<DeleteProductInput["params"]>,
+    res: Response,
+    next: NextFunction
+) {
     try {
         const { user } = res.locals;
         const { productId } = req.params;

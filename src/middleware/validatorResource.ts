@@ -6,7 +6,8 @@ import log from "../utils/logger.utils";
 
 const validatorResource = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
     try {
-        log.info("[BODY]", req.body);
+        log.info("[BODY]");
+        log.info({ body: req.body });
 
         schema.parse({
             body: req.body,

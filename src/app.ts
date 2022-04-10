@@ -12,7 +12,6 @@ const app = express();
 const port = config.get<number>("port");
 const baseUrl = config.get<number>("baseUrl");
 
-log.info( config.get("privateKey"));
 app.use(cors());
 app.use(deserializedUser);
 app.use(express.json());

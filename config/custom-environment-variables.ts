@@ -1,4 +1,6 @@
 export default {
-    publicKey: "PUBLICKEY",
-    privateKey: "PRIVATEKEY",
+    keys: {
+        publicKey: "PUBLICKEY",
+        privateKey: "PRIVATEKEY",
+    },
 };
